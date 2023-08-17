@@ -7,6 +7,7 @@ import {
   Card,
   CardContent,
   CardMedia,
+  CircularProgress,
   Grid,
   List,
   ListItem,
@@ -35,6 +36,7 @@ const ProductList = () => {
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [cartPopupOpen, setCartPopupOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const cartItems = useSelector((state) => state.cart.items);
 
@@ -47,8 +49,10 @@ const ProductList = () => {
       const response = await fetch(API_URL);
       const data = await response.json();
       setProducts(data);
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
     }
   };
 
@@ -92,46 +96,52 @@ const ProductList = () => {
         </Button>
       </Box>
       <List>
-        <Grid container justifyContent="center" spacing={2}>
-          {products.map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product.id}>
-              <ListItem>
-                <Card sx={{ mx: 2, px: 2, pt: 2 }}>
-                  <CardMedia
-                    component="img"
-                    height="250"
-                    image={product.prodImage}
-                    sx={{ ...imageStyles }}
-                  />
-                  <CardContent>
-                    <Box sx={{ ...cardTextStyles }}>
-                      <Typography variant="h6">{product.prodName}</Typography>
-                      <Typography variant="h6" fontWeight={"600"}>
-                        ${product.prodPrice}
-                      </Typography>
-                    </Box>
-                    <Stack sx={{ my: 2 }} direction="row" spacing={2}>
-                      <Button
-                        variant="contained"
-                        sx={{ ...buttonStyles }}
-                        onClick={() => handleAddToCart(product)}
-                      >
-                        Add to Cart
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        sx={{ ...buttonStyles }}
-                        onClick={handleOpenCartPopup}
-                      >
-                        View Cart
-                      </Button>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </ListItem>
-            </Grid>
-          ))}
-        </Grid>
+        {isLoading ? (
+          <Box display="flex" justifyContent="center" my={4}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Grid container justifyContent="center" spacing={2}>
+            {products.map((product) => (
+              <Grid item xs={12} sm={6} md={4} key={product.id}>
+                <ListItem>
+                  <Card sx={{ mx: 2, px: 2, pt: 2 }}>
+                    <CardMedia
+                      component="img"
+                      height="250"
+                      image={product.prodImage}
+                      sx={{ ...imageStyles }}
+                    />
+                    <CardContent>
+                      <Box sx={{ ...cardTextStyles }}>
+                        <Typography variant="h6">{product.prodName}</Typography>
+                        <Typography variant="h6" fontWeight={"600"}>
+                          ${product.prodPrice}
+                        </Typography>
+                      </Box>
+                      <Stack sx={{ my: 2 }} direction="row" spacing={2}>
+                        <Button
+                          variant="contained"
+                          sx={{ ...buttonStyles }}
+                          onClick={() => handleAddToCart(product)}
+                        >
+                          Add to Cart
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          sx={{ ...buttonStyles }}
+                          onClick={handleOpenCartPopup}
+                        >
+                          View Cart
+                        </Button>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </ListItem>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </List>
       <CartPopup open={cartPopupOpen} onClose={handleCloseCartPopup} />
     </Box>

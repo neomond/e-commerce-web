@@ -7,7 +7,7 @@ import {
 } from "./actions";
 
 const initialState = {
-  items: [],
+  items: JSON.parse(localStorage.getItem("cartItems")) || [],
 };
 
 const cartReducer = createReducer(initialState, (builder) => {
@@ -21,10 +21,12 @@ const cartReducer = createReducer(initialState, (builder) => {
       } else {
         state.items.push({ ...product, quantity: 1 });
       }
+      localStorage.setItem("cartItems", JSON.stringify(state.items));
     })
     .addCase(removeFromCart, (state, action) => {
       const productId = action.payload;
       state.items = state.items.filter((item) => item.id !== productId);
+      localStorage.setItem("cartItems", JSON.stringify(state.items));
     })
     .addCase(incrementQuantity, (state, action) => {
       const itemId = action.payload;
@@ -32,6 +34,7 @@ const cartReducer = createReducer(initialState, (builder) => {
       if (itemToIncrement) {
         itemToIncrement.quantity += 1;
       }
+      localStorage.setItem("cartItems", JSON.stringify(state.items));
     })
     .addCase(decrementQuantity, (state, action) => {
       const itemId = action.payload;
@@ -44,6 +47,7 @@ const cartReducer = createReducer(initialState, (builder) => {
           state.items = state.items.filter((item) => item.id !== itemId);
         }
       }
+      localStorage.setItem("cartItems", JSON.stringify(state.items));
     });
 });
 
