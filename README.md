@@ -19,4 +19,4 @@ This project is built using the following technologies:
 
 ## View Project
 You can access and interact with the deployed project using the following Netlify link:
-[View Project Here](https://nazrinatayeva-ecommerce.netlify.app/)
+[View Project Here](https://nazrinta-e-commerce.netlify.app/)
