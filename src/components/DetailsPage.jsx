@@ -56,7 +56,6 @@ const DetailsPage = () => {
         <Card sx={{ mx: 2, px: 2, pt: 2 }}>
           <CardMedia
             component="img"
-            height="500"
             sx={{ ...imageStyles }}
             image={product.prodImage}
             alt={product.prodName}

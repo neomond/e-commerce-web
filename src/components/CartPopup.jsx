@@ -15,7 +15,14 @@ import {
 } from "@mui/material";
 import { Close, ShoppingBasket } from "@mui/icons-material";
 import { decrementQuantity, incrementQuantity } from "../redux/actions";
-import { fontStyles, listItemStyles, popUpEmptyStyles } from "../styles/styles";
+import {
+  cartTitleStyles,
+  fontStyles,
+  imageBoxStyles,
+  listItemStyles,
+  listpopUpStyles,
+  popUpEmptyStyles,
+} from "../styles/styles";
 
 const CartPopup = ({ open, onClose }) => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -36,7 +43,7 @@ const CartPopup = ({ open, onClose }) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md">
       <DialogTitle sx={{ ...listItemStyles, mt: 1.5 }}>
-        <Typography variant="h5" sx={{ mx: "auto" }}>
+        <Typography variant="h5" sx={{ mx: "auto", ...cartTitleStyles }}>
           Your Cart
         </Typography>
         <IconButton
@@ -65,15 +72,12 @@ const CartPopup = ({ open, onClose }) => {
                   borderBottom:
                     index < cartItems.length - 1 && "1px solid #e3e3e3",
                   pb: 5,
-                  ...listItemStyles,
+                  ...listpopUpStyles,
                 }}
               >
                 <Box
                   component="img"
-                  sx={{
-                    width: "150px",
-                    marginRight: "30px",
-                  }}
+                  sx={{ ...imageBoxStyles }}
                   alt={item.prodName}
                   src={item.prodImage}
                 />
