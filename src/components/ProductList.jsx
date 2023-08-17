@@ -32,7 +32,7 @@ import {
   navTextStyles,
 } from "../styles/styles";
 import { Link } from "react-router-dom";
-import CreateProductForm from "./CreateProductPage";
+import CreateProductForm from "./CreateProductForm";
 import AnimatedPage from "../styles/AnimatedPage";
 
 const ProductList = () => {
@@ -40,16 +40,19 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [cartPopupOpen, setCartPopupOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   const cartItems = useSelector((state) => state.cart.items);
 
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-
   const handleCreateProduct = (newProduct) => {
-    setProducts([...products, newProduct]);
+    const updatedProducts = [...products, newProduct];
+    setProducts(updatedProducts);
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
   };
 
   useEffect(() => {
+    const savedProducts = JSON.parse(localStorage.getItem("products")) || [];
+    setProducts(savedProducts);
     fetchProducts();
   }, []);
 
@@ -167,7 +170,7 @@ const ProductList = () => {
       <CreateProductForm
         open={createDialogOpen}
         onClose={() => setCreateDialogOpen(false)}
-        onCreate={handleCreateProduct}
+        onProductCreate={handleCreateProduct}
       />
     </AnimatedPage>
   );
