@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../redux/actions";
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -9,19 +10,33 @@ import {
   Grid,
   List,
   ListItem,
+  Stack,
   Typography,
 } from "@mui/material";
-import { Create, ShoppingCart } from "@mui/icons-material";
-import CartPopup from "./CartPopup";
 
-const API_URL = "https://64dcd381e64a8525a0f73303.mockapi.io/products";
+import {
+  Create,
+  ShoppingCart,
+  ShoppingCartOutlined,
+} from "@mui/icons-material";
+import CartPopup from "./CartPopup";
+import { API_URL } from "../utils/API_URL";
+import {
+  buttonStyles,
+  cardTextStyles,
+  cartBtnStyles,
+  cartItemCountStyles,
+  imageStyles,
+  navStyles,
+  navTextStyles,
+} from "../styles/styles";
 
 const ProductList = () => {
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [cartPopupOpen, setCartPopupOpen] = useState(false);
 
-  console.log(products);
+  const cartItems = useSelector((state) => state.cart.items);
 
   useEffect(() => {
     fetchProducts();
@@ -33,7 +48,7 @@ const ProductList = () => {
       const data = await response.json();
       setProducts(data);
     } catch (error) {
-      // console.error("Error fetching products:", error);
+      console.error(error);
     }
   };
 
@@ -49,82 +64,68 @@ const ProductList = () => {
     setCartPopupOpen(false);
   };
 
+  const cartItemCount = cartItems.reduce(
+    (count, item) => count + item.quantity,
+    0
+  );
+
   return (
-    <div>
-      <Typography
-        variant="h4"
-        textAlign="center"
-        pt={4}
-        pb={2}
-        px={4}
-        sx={{ display: "flex", justifyContent: "space-between" }}
-      >
-        <Button
-          sx={{ minWidth: 0, padding: 0 }}
-          onClick={() => console.log("Create button clicked")}
-        >
+    <Box>
+      <Box pt={4} pb={2} px={4} sx={{ ...navStyles }}>
+        <Button onClick={() => {}}>
           <Create sx={{ fontSize: 30 }} />
         </Button>
-        Product List
-        <Button sx={{ minWidth: 0, padding: 0 }} onClick={handleOpenCartPopup}>
-          <ShoppingCart sx={{ fontSize: 30 }} />
+        <Typography variant="h4" sx={{ ...navTextStyles }}>
+          Product List
+        </Typography>
+        <Button sx={{ ...cartBtnStyles }} onClick={handleOpenCartPopup}>
+          {cartItemCount > 0 ? (
+            <ShoppingCartOutlined sx={{ fontSize: 30 }} />
+          ) : (
+            <ShoppingCart sx={{ fontSize: 30 }} />
+          )}
+          {cartItemCount > 0 && (
+            <Typography style={{ ...cartItemCountStyles }}>
+              {cartItemCount}
+            </Typography>
+          )}
         </Button>
-      </Typography>
+      </Box>
       <List>
-        <Grid container>
+        <Grid container justifyContent="center" spacing={2}>
           {products.map((product) => (
-            <Grid item xs={4} key={product.id}>
+            <Grid item xs={12} sm={6} md={4} key={product.id}>
               <ListItem>
                 <Card sx={{ mx: 2, px: 2, pt: 2 }}>
                   <CardMedia
                     component="img"
                     height="250"
                     image={product.prodImage}
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      objectFit: "contain",
-                    }}
+                    sx={{ ...imageStyles }}
                   />
                   <CardContent>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
+                    <Box sx={{ ...cardTextStyles }}>
                       <Typography variant="h6">{product.prodName}</Typography>
                       <Typography variant="h6" fontWeight={"600"}>
                         ${product.prodPrice}
                       </Typography>
-                    </div>
-                    <Grid
-                      container
-                      justifyContent="space-between"
-                      my={2}
-                      sx={{ width: "100%" }}
-                    >
+                    </Box>
+                    <Stack sx={{ my: 2 }} direction="row" spacing={2}>
                       <Button
                         variant="contained"
-                        sx={{
-                          marginRight: 1,
-                          fontSize: 12,
-                          width: 120,
-                          height: 40,
-                        }}
+                        sx={{ ...buttonStyles }}
                         onClick={() => handleAddToCart(product)}
                       >
                         Add to Cart
                       </Button>
                       <Button
                         variant="outlined"
-                        sx={{ marginLeft: 1, fontSize: 12, width: 120 }}
+                        sx={{ ...buttonStyles }}
                         onClick={handleOpenCartPopup}
                       >
                         View Cart
                       </Button>
-                    </Grid>
+                    </Stack>
                   </CardContent>
                 </Card>
               </ListItem>
@@ -133,7 +134,7 @@ const ProductList = () => {
         </Grid>
       </List>
       <CartPopup open={cartPopupOpen} onClose={handleCloseCartPopup} />
-    </div>
+    </Box>
   );
 };
 

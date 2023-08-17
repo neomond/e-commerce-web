@@ -41,7 +41,6 @@ const cartReducer = createReducer(initialState, (builder) => {
         if (itemToDecrement.quantity > 1) {
           itemToDecrement.quantity -= 1;
         } else {
-          // Remove the item from the cart when quantity is zero or negative
           state.items = state.items.filter((item) => item.id !== itemId);
         }
       }

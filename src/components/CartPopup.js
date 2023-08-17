@@ -11,10 +11,11 @@ import {
   IconButton,
   Button,
   Stack,
+  Box,
 } from "@mui/material";
 import { Close, ShoppingBasket } from "@mui/icons-material";
-
 import { decrementQuantity, incrementQuantity } from "../redux/actions";
+import { fontStyles, listItemStyles, popUpEmptyStyles } from "../styles/styles";
 
 const CartPopup = ({ open, onClose }) => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -33,14 +34,8 @@ const CartPopup = ({ open, onClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm">
-      <DialogTitle
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+    <Dialog open={open} onClose={onClose} maxWidth="md">
+      <DialogTitle sx={{ ...listItemStyles, mt: 1.5 }}>
         <Typography variant="h5" sx={{ mx: "auto" }}>
           Your Cart
         </Typography>
@@ -55,18 +50,12 @@ const CartPopup = ({ open, onClose }) => {
       </DialogTitle>
       <DialogContent>
         {cartItems.length === 0 ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
+          <Box style={{ ...popUpEmptyStyles }}>
             <ShoppingBasket sx={{ fontSize: 100, color: "#999" }} />
-            <Typography variant="h5" align="center" mt={2}>
-              You have no products here.
+            <Typography variant="h5" align="center" my={2}>
+              You have no products.
             </Typography>
-          </div>
+          </Box>
         ) : (
           <List>
             {cartItems.map((item, index) => (
@@ -76,25 +65,23 @@ const CartPopup = ({ open, onClose }) => {
                   borderBottom:
                     index < cartItems.length - 1 && "1px solid #e3e3e3",
                   py: 3,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
+                  ...listItemStyles,
                 }}
               >
-                <img
-                  src={item.prodImage}
-                  alt={item.prodName}
-                  style={{
+                <Box
+                  component="img"
+                  sx={{
                     width: "150px",
                     marginRight: "30px",
                   }}
+                  alt={item.prodName}
+                  src={item.prodImage}
                 />
-                <div style={{ flexDirection: "column" }}>
+                <Box style={{ flexDirection: "column" }}>
                   <ListItemText
                     primary={`${item.prodName}`}
-                    secondary={`$ ${item.prodPrice} x ${item.quantity}`}
+                    secondary={`$ ${item.prodPrice} x (${item.quantity})`}
                   />
-
                   <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
                     <Button
                       variant="outlined"
@@ -113,12 +100,15 @@ const CartPopup = ({ open, onClose }) => {
                       add
                     </Button>
                   </Stack>
-                </div>
+                </Box>
               </ListItem>
             ))}
-            <div style={{ textAlign: "right", fontSize: 22 }}>
-              <strong>Total: ${cartTotal.toFixed(2)}</strong>
-            </div>
+            <Box sx={{ ...listItemStyles }}>
+              <Typography sx={{ ...fontStyles }}>Total: </Typography>
+              <Typography sx={{ ...fontStyles }}>
+                ${cartTotal.toFixed(2)}
+              </Typography>
+            </Box>
           </List>
         )}
       </DialogContent>
