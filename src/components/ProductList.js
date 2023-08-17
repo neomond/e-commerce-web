@@ -11,6 +11,7 @@ import {
   ListItem,
   Typography,
 } from "@mui/material";
+import { Create, ShoppingCart } from "@mui/icons-material";
 import CartPopup from "./CartPopup";
 
 const API_URL = "https://64dcd381e64a8525a0f73303.mockapi.io/products";
@@ -50,8 +51,24 @@ const ProductList = () => {
 
   return (
     <div>
-      <Typography variant="h4" textAlign="center" pt={5} pb={2}>
+      <Typography
+        variant="h4"
+        textAlign="center"
+        pt={4}
+        pb={2}
+        px={4}
+        sx={{ display: "flex", justifyContent: "space-between" }}
+      >
+        <Button
+          sx={{ minWidth: 0, padding: 0 }}
+          onClick={() => console.log("Create button clicked")}
+        >
+          <Create sx={{ fontSize: 30 }} />
+        </Button>
         Product List
+        <Button sx={{ minWidth: 0, padding: 0 }} onClick={handleOpenCartPopup}>
+          <ShoppingCart sx={{ fontSize: 30 }} />
+        </Button>
       </Typography>
       <List>
         <Grid container>
@@ -82,9 +99,6 @@ const ProductList = () => {
                         ${product.prodPrice}
                       </Typography>
                     </div>
-                    {/* <Typography variant="body2" sx={{ mb: 3, lineHeight: 1.3 }}>
-                      {product.prodDescription}
-                    </Typography> */}
                     <Grid
                       container
                       justifyContent="space-between"
