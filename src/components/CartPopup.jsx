@@ -64,7 +64,7 @@ const CartPopup = ({ open, onClose }) => {
                 sx={{
                   borderBottom:
                     index < cartItems.length - 1 && "1px solid #e3e3e3",
-                  py: 3,
+                  pb: 5,
                   ...listItemStyles,
                 }}
               >

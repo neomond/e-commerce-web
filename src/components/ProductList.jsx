@@ -31,6 +31,9 @@ import {
   navStyles,
   navTextStyles,
 } from "../styles/styles";
+import { Link } from "react-router-dom";
+import CreateProductForm from "./CreateProductPage";
+import AnimatedPage from "../styles/AnimatedPage";
 
 const ProductList = () => {
   const dispatch = useDispatch();
@@ -39,6 +42,12 @@ const ProductList = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const cartItems = useSelector((state) => state.cart.items);
+
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+
+  const handleCreateProduct = (newProduct) => {
+    setProducts([...products, newProduct]);
+  };
 
   useEffect(() => {
     fetchProducts();
@@ -60,7 +69,8 @@ const ProductList = () => {
     dispatch(addToCart(product));
   };
 
-  const handleOpenCartPopup = () => {
+  const handleOpenCartPopup = (e) => {
+    e.preventDefault();
     setCartPopupOpen(true);
   };
 
@@ -74,9 +84,9 @@ const ProductList = () => {
   );
 
   return (
-    <Box>
+    <AnimatedPage>
       <Box pt={4} pb={2} px={4} sx={{ ...navStyles }}>
-        <Button onClick={() => {}}>
+        <Button onClick={() => setCreateDialogOpen(true)}>
           <Create sx={{ fontSize: 30 }} />
         </Button>
         <Typography variant="h4" sx={{ ...navTextStyles }}>
@@ -105,38 +115,48 @@ const ProductList = () => {
             {products.map((product) => (
               <Grid item xs={12} sm={6} md={4} key={product.id}>
                 <ListItem>
-                  <Card sx={{ mx: 2, px: 2, pt: 2 }}>
-                    <CardMedia
-                      component="img"
-                      height="250"
-                      image={product.prodImage}
-                      sx={{ ...imageStyles }}
-                    />
-                    <CardContent>
-                      <Box sx={{ ...cardTextStyles }}>
-                        <Typography variant="h6">{product.prodName}</Typography>
-                        <Typography variant="h6" fontWeight={"600"}>
-                          ${product.prodPrice}
-                        </Typography>
-                      </Box>
-                      <Stack sx={{ my: 2 }} direction="row" spacing={2}>
-                        <Button
-                          variant="contained"
-                          sx={{ ...buttonStyles }}
-                          onClick={() => handleAddToCart(product)}
-                        >
-                          Add to Cart
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          sx={{ ...buttonStyles }}
-                          onClick={handleOpenCartPopup}
-                        >
-                          View Cart
-                        </Button>
-                      </Stack>
-                    </CardContent>
-                  </Card>
+                  <Link
+                    to={`/${product.id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Card sx={{ mx: 2, px: 2, pt: 2 }}>
+                      <CardMedia
+                        component="img"
+                        height="250"
+                        image={product.prodImage}
+                        sx={{ ...imageStyles }}
+                      />
+                      <CardContent>
+                        <Box sx={{ ...cardTextStyles }}>
+                          <Typography variant="h6">
+                            {product.prodName}
+                          </Typography>
+                          <Typography variant="h6" fontWeight={"600"}>
+                            ${product.prodPrice}
+                          </Typography>
+                        </Box>
+                        <Stack sx={{ my: 2 }} direction="row" spacing={2}>
+                          <Button
+                            variant="contained"
+                            sx={{ ...buttonStyles }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleAddToCart(product);
+                            }}
+                          >
+                            Add to Cart
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            sx={{ ...buttonStyles }}
+                            onClick={handleOpenCartPopup}
+                          >
+                            View Cart
+                          </Button>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 </ListItem>
               </Grid>
             ))}
@@ -144,7 +164,12 @@ const ProductList = () => {
         )}
       </List>
       <CartPopup open={cartPopupOpen} onClose={handleCloseCartPopup} />
-    </Box>
+      <CreateProductForm
+        open={createDialogOpen}
+        onClose={() => setCreateDialogOpen(false)}
+        onCreate={handleCreateProduct}
+      />
+    </AnimatedPage>
   );
 };
 
