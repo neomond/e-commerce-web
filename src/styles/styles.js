@@ -11,7 +11,6 @@ export const imageStyles = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  height: 500,
   objectFit: "contain",
   "@media (max-width: 600px)": {
     margin: 0,
