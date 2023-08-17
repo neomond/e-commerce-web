@@ -4,11 +4,9 @@ Welcome to the e-commerce_web repository! This project utilizes a modern tech st
 
 ## Table of Contents
 - [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-- [API](#api)
 - [View Project](#view-project)
-- [Contributing](#contributing)
-- [License](#license)
+
+
 
 ## Tech Stack
 This project is built using the following technologies:
